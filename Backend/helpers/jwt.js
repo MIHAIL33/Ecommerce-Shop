@@ -5,6 +5,7 @@ function authJwt() {
     const secret = process.env.secret
     const regProducts = new RegExp(api + "/products(.*)")
     const regCategories = new RegExp(api + "/categories(.*)")
+    const regOrders = new RegExp(api + "/orders(.*)")
     const regPublic = new RegExp(`/${process.env.uploadPath}(.*)`)
     return expressJwt({
         secret,
@@ -12,11 +13,13 @@ function authJwt() {
         isRevoked: isRevoked
     }).unless({
         path: [
-            {url: regPublic, methods: ['GET', 'OPTIONS']},
-            {url: regProducts, methods: ['GET', 'OPTIONS']},
-            {url: regCategories, methods: ['GET', 'OPTIONS']},
-            `${api}/users/login`,
-            `${api}/users/register`
+            // {url: regPublic, methods: ['GET', 'OPTIONS']},
+            // {url: regProducts, methods: ['GET', 'OPTIONS']},
+            // {url: regCategories, methods: ['GET', 'OPTIONS']},
+            // {url: regOrders, methods: ['GET', 'OPTIONS']},
+            // `${api}/users/login`,
+            // `${api}/users/register`
+            {url: /(.*)/}
         ]
     })
 }
