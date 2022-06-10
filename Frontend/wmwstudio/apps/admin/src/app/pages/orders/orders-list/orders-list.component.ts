@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Order, OrdersService } from '@wmwstudio/orders';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ORDER_STATUS } from '../order.constants';
 
 @Component({
@@ -10,10 +12,12 @@ import { ORDER_STATUS } from '../order.constants';
   styles: [
   ]
 })
-export class OrdersListComponent implements OnInit {
+export class OrdersListComponent implements OnInit, OnDestroy {
 
   orders: Order[] = [];
   orderStatus = ORDER_STATUS;
+
+  endsubs$: Subject<any> = new Subject();
 
   constructor(
     private ordersService: OrdersService,
@@ -26,8 +30,13 @@ export class OrdersListComponent implements OnInit {
     this._getOrders()
   }
 
+  ngOnDestroy(): void {
+    this.endsubs$.next()
+    this.endsubs$.complete()
+  }
+
   _getOrders() {
-    this.ordersService.getOrders().subscribe((orders) => {
+    this.ordersService.getOrders().pipe(takeUntil(this.endsubs$)).subscribe((orders) => {
       this.orders = orders
     })
   }
@@ -42,7 +51,7 @@ export class OrdersListComponent implements OnInit {
       header: 'Delete Order',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.ordersService.deleteOrder(orderId).subscribe(
+        this.ordersService.deleteOrder(orderId).pipe(takeUntil(this.endsubs$)).subscribe(
           () => {
             this._getOrders()
             this.messageService.add({

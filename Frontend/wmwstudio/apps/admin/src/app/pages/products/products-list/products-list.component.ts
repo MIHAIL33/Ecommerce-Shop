@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Product, ProductsService } from '@wmwstudio/products';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'admin-products-list',
@@ -9,9 +11,11 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styles: [
   ]
 })
-export class ProductsListComponent implements OnInit {
+export class ProductsListComponent implements OnInit, OnDestroy {
 
   products: Product[] = []
+
+  endsubs$: Subject<any> = new Subject();
 
   constructor(
     private productsService: ProductsService,
@@ -24,8 +28,13 @@ export class ProductsListComponent implements OnInit {
     this._getProducts()
   }
 
+  ngOnDestroy(): void {
+    this.endsubs$.next()
+    this.endsubs$.complete()
+  }
+
   private _getProducts() {
-    this.productsService.getProducts().subscribe(products => {
+    this.productsService.getProducts().pipe(takeUntil(this.endsubs$)).subscribe(products => {
       this.products = products;
     })
   }
@@ -36,7 +45,7 @@ export class ProductsListComponent implements OnInit {
       header: 'Delete Product',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.productsService.deleteProduct(productId).subscribe(
+        this.productsService.deleteProduct(productId).pipe(takeUntil(this.endsubs$)).subscribe(
           () => {
             this._getProducts()
             this.messageService.add({

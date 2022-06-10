@@ -1,10 +1,11 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CategoriesService, Category, Product, ProductsService } from '@wmwstudio/products';
 import { MessageService } from 'primeng/api';
-import { timer } from 'rxjs';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'admin-products-form',
@@ -12,7 +13,7 @@ import { timer } from 'rxjs';
   styles: [
   ]
 })
-export class ProductsFormComponent implements OnInit {
+export class ProductsFormComponent implements OnInit, OnDestroy {
 
   editmode: boolean = false
   form!: FormGroup
@@ -20,6 +21,8 @@ export class ProductsFormComponent implements OnInit {
   categories: Category[] = []
   imageDisplay!: string | ArrayBuffer | null | undefined
   currentProductId!: string
+
+  endsubs$: Subject<any> = new Subject();
 
   constructor(
     private location: Location,
@@ -34,6 +37,11 @@ export class ProductsFormComponent implements OnInit {
     this._initForm()
     this._getCategories()
     this._checkEditMode()
+  }
+
+  ngOnDestroy(): void {
+    this.endsubs$.next()
+    this.endsubs$.complete()
   }
 
   private _initForm() {
@@ -51,13 +59,13 @@ export class ProductsFormComponent implements OnInit {
   }
 
   private _getCategories() {
-    this.categoriesService.getCategories().subscribe(categories => {
+    this.categoriesService.getCategories().pipe(takeUntil(this.endsubs$)).subscribe(categories => {
       this.categories = categories
     })
   }
 
   private _addProduct(productData: FormData) {
-    this.productsService.createProduct(productData).subscribe(
+    this.productsService.createProduct(productData).pipe(takeUntil(this.endsubs$)).subscribe(
       (product: Product) => {
         this.messageService.add({
           severity: 'success',
@@ -81,11 +89,11 @@ export class ProductsFormComponent implements OnInit {
   }
 
   private _checkEditMode() {
-    this.route.params.subscribe((params) => {
+    this.route.params.pipe(takeUntil(this.endsubs$)).subscribe((params) => {
       if (params.id) {
         this.editmode = true
         this.currentProductId = params.id
-        this.productsService.getProduct(params.id).subscribe((product) => {
+        this.productsService.getProduct(params.id).pipe(takeUntil(this.endsubs$)).subscribe((product) => {
           this.productForm.name.setValue(product.name)
           this.productForm.category.setValue(product.category?.id)
           this.productForm.brand.setValue(product.brand)
@@ -103,7 +111,7 @@ export class ProductsFormComponent implements OnInit {
   }
 
   private _updateProduct(productData: FormData) {
-    this.productsService.updateProduct(productData, this.currentProductId).subscribe(
+    this.productsService.updateProduct(productData, this.currentProductId).pipe(takeUntil(this.endsubs$)).subscribe(
       () => {
         this.messageService.add({
           severity: 'success',
