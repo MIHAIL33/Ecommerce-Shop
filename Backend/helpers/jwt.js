@@ -13,13 +13,13 @@ function authJwt() {
         isRevoked: isRevoked
     }).unless({
         path: [
-            // {url: regPublic, methods: ['GET', 'OPTIONS']},
-            // {url: regProducts, methods: ['GET', 'OPTIONS']},
-            // {url: regCategories, methods: ['GET', 'OPTIONS']},
-            // {url: regOrders, methods: ['GET', 'OPTIONS']},
-            // `${api}/users/login`,
-            // `${api}/users/register`
-            {url: /(.*)/}
+            {url: regPublic, methods: ['GET', 'OPTIONS']},
+            {url: regProducts, methods: ['GET', 'OPTIONS']},
+            {url: regCategories, methods: ['GET', 'OPTIONS']},
+            {url: regOrders, methods: ['GET', 'OPTIONS']},
+            `${api}/users/login`,
+            `${api}/users/register`
+            //{url: /(.*)/}
         ]
     })
 }

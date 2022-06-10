@@ -1,4 +1,4 @@
-import { products } from './products';
+import { products } from './products.module';
 
 describe('products', () => {
     it('should work', () => {

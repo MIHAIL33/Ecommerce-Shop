@@ -121,7 +121,7 @@ router.get(`/get/count`, async (req, res) => {
         return res.status(500).json({success: false})
     }
 
-    return res.send({orderCount: orderCount})
+    res.send({orderCount: orderCount})
 })
 
 router.get(`/get/userorders/:userid`, async (req, res) => {

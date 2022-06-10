@@ -1,4 +1,4 @@
-import { orders } from './orders';
+import { orders } from './orders.module';
 
 describe('orders', () => {
     it('should work', () => {
