@@ -11,7 +11,9 @@ import { ProductListComponent } from './pages/product-list/product-list.componen
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 
-import { AccordionModule } from 'primeng/accordion'
+import { AccordionModule } from 'primeng/accordion';
+import { NavComponent } from './shared/nav/nav.component'
+import { ProductsModule } from '@wmwstudio/products';
 
 const routes: Routes = [
   {path: '', component: HomePageComponent},
@@ -19,8 +21,15 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [AppComponent, HomePageComponent, ProductListComponent, HeaderComponent, FooterComponent],
-  imports: [BrowserModule, BrowserAnimationsModule, RouterModule.forRoot(routes), UiModule, AccordionModule],
+  declarations: [AppComponent, HomePageComponent, ProductListComponent, HeaderComponent, FooterComponent, NavComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    RouterModule.forRoot(routes),
+    UiModule,
+    AccordionModule,
+    ProductsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

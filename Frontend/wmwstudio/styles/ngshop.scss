@@ -1,3 +1,5 @@
+@import '~normalize.css/normalize.css';
+
 @import './base/color.scss';
 @import './base/fonts.scss';
 @import './base/mixins.scss';
@@ -17,6 +19,17 @@
 
 @import './apps/shop/shared/header.scss';
 @import './apps/shop/shared/footer.scss';
+@import './apps/shop/shared/nav.scss';
 
 
-@import './libs/ui/ui.scss'
+@import './libs/ui/ui.scss';
+@import './libs/products/products.scss';
+
+
+
+.container {
+    width: 1200px;
+    padding: 15px;
+    margin: 0 auto;
+    background-color: var(--surface-100);
+}
