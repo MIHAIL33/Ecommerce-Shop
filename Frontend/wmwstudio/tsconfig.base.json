@@ -15,11 +15,11 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@env/*": ["environments/*"],
             "@wmwstudio/orders": ["libs/orders/src/index.ts"],
             "@wmwstudio/products": ["libs/products/src/index.ts"],
             "@wmwstudio/ui": ["libs/ui/src/index.ts"],
-            "@wmwstudio/users": ["libs/users/src/index.ts"],
-            "@env/*" : ["environments/*"]
+            "@wmwstudio/users": ["libs/users/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]
