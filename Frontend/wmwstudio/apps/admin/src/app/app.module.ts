@@ -73,13 +73,13 @@ const UX_MODULE = [
         OrdersDetailComponent,
     ],
     imports: [
-        AppRoutingModule,
         BrowserModule,
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
         UsersModule,
+        AppRoutingModule,
         ...UX_MODULE
     ],
     providers: [
